@@ -2,14 +2,12 @@ cmake_minimum_required (VERSION 2.8.10 FATAL_ERROR)
 
 project (wsjt-superbuild)
 
-set (__default_tag branches/wsjtx)
+set (__default_tag stable)
 
 set (WSJTX_TAG ${__default_tag}
-  CACHE STRING "WSJT-X tag or branch to build, if unset build the latest trunk.
+  CACHE STRING "WSJT-X tag to build, if unset build the latest stable branch.
 
-For a tag use tags/<tag-name> e.g. tags/wsjtx-1.4.0-rc2
-
-For a branch use branches/<branch-name> e.g. branches/wsjtx-1.4
+For a tag use <tag-name> e.g. wsjtx-1.9.1
 
 The  WSJTX_TAG option  is  only used  if the  directory  'src' is  not
 present.   If the  'src' directory  is present  the build  expects the
@@ -52,38 +50,27 @@ if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
   # one day this needs to change to the hamlib git master
   set (hamlib_repo git://git.code.sf.net/u/bsomervi/hamlib)
 
-  set (wsjtx_repo svn://svn.code.sf.net/p/wsjt/wsjt/${WSJTX_TAG})
-
-  string (FIND ${WSJTX_TAG} / __pos REVERSE)
-
-  # validate tag, not rigorous but git/svn will error out if
-  # calculated tags or branches don't exist
-  if (__pos EQUAL -1)
-    message (FATAL_ERROR "Invalid TAG format.")
-  endif (__pos EQUAL -1)
+  set (wsjtx_repo git://git.code.sf.net/p/wsjt/wsjtx)
 
   # one day this needs to change to master or some agreed stable SHA
   set (hamlib_TAG integration)
 
-  # split the WSJTX_TAG variable
-  string (SUBSTRING ${WSJTX_TAG} 0 ${__pos} __prefix)
-  math (EXPR __pos "${__pos} + 1")
-  string (SUBSTRING ${WSJTX_TAG} ${__pos} -1 __suffix)
-
-  # decide if we want to build from a branch or a tag
-  if (NOT __prefix STREQUAL branches)
+  # decide if we want to build from stable or a tag
+  if (NOT ${WSJTX_TAG} STREQUAL stable)
     # assume we have a tag so find matching hamlib tag
     #
     # this assumed that a tag exists in the hamlib repository that is
     # exactly the same as the WSJT-X repository tag we intend to build
     # from
-    set (hamlib_TAG "${__suffix}")
+    set (hamlib_TAG "${WSJTX_TAG}")
+    set (target_dir "${WSJTX_TAG}")
     message (STATUS "Building WSJT-X tag: ${WSJTX_TAG}")
     message (STATUS "hamlib tag: ${hamlib_TAG}")
-  else (NOT __prefix STREQUAL branches)
+  else ()
+    set (target_dir wsjtx)
     message (STATUS "Building WSJT-X branch: ${WSJTX_TAG}")
     message (STATUS "hamlib branch: ${hamlib_TAG}")
-  endif (NOT __prefix STREQUAL branches)
+  endif ()
 else (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
   read_md5sum (src/hamlib.tgz hamlib_md5sum)
   read_md5sum (src/wsjtx.tgz wsjtx_md5sum)
@@ -151,7 +138,8 @@ endforeach ()
 #
 ExternalProject_Get_Property (hamlib INSTALL_DIR)
 ExternalProject_Add (wsjtx
-  SVN_REPOSITORY ${wsjtx_repo}
+  GIT_REPOSITORY ${wsjtx_repo}
+  GIT_TAG ${WSJTX_TAG}
   URL ${CMAKE_CURRENT_SOURCE_DIR}/src/wsjtx.tgz
   URL_HASH MD5=${wsjtx_md5sum}
   PATCH_COMMAND ${PATCH_EXECUTABLE} -p1 -N < ${CMAKE_CURRENT_SOURCE_DIR}/wsjtx.patch
@@ -194,7 +182,7 @@ ExternalProject_Get_Property (wsjtx TMP_DIR)
 add_custom_target (wsjtx_sources
   COMMAND ${CMAKE_COMMAND} -E make_directory wsjtx
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOURCE_DIR} wsjtx
-  COMMAND ${CMAKE_COMMAND} -E remove_directory wsjtx/.svn
+  COMMAND ${CMAKE_COMMAND} -E remove_directory wsjtx/.git
   COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_CURRENT_BINARY_DIR}/wsjtx.tgz wsjtx
   COMMAND ${CMAKE_COMMAND} -E remove_directory wsjtx
   WORKING_DIRECTORY ${TMP_DIR}
@@ -208,31 +196,31 @@ add_custom_target (wsjtx_sources
 # a local build
 #
 add_custom_target (source
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${__suffix}
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR} ${__suffix}
-  COMMAND ${CMAKE_COMMAND} -E remove_directory ${__suffix}/.svn
-  COMMAND ${CMAKE_COMMAND} -E remove_directory ${__suffix}/.git
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${__suffix}/src
-  COMMAND ${CMAKE_COMMAND} -E rename hamlib.tgz ${__suffix}/src/hamlib.tgz
-  COMMAND ${CMAKE_COMMAND} -E rename wsjtx.tgz ${__suffix}/src/wsjtx.tgz
-  COMMAND ${CMAKE_COMMAND} -E md5sum ${__suffix}/src/hamlib.tgz > ${__suffix}/src/hamlib.tgz.md5sum
-  COMMAND ${CMAKE_COMMAND} -E md5sum ${__suffix}/src/wsjtx.tgz > ${__suffix}/src/wsjtx.tgz.md5sum
-  COMMAND ${CMAKE_COMMAND} -E tar czf ${__suffix}.tgz ${__suffix}
-  COMMAND ${CMAKE_COMMAND} -E remove_directory ${__suffix}
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${target_dir}
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR} ${target_dir}
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${target_dir}/.svn
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${target_dir}/.git
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${target_dir}/src
+  COMMAND ${CMAKE_COMMAND} -E rename hamlib.tgz ${target_dir}/src/hamlib.tgz
+  COMMAND ${CMAKE_COMMAND} -E rename wsjtx.tgz ${target_dir}/src/wsjtx.tgz
+  COMMAND ${CMAKE_COMMAND} -E md5sum ${target_dir}/src/hamlib.tgz > ${target_dir}/src/hamlib.tgz.md5sum
+  COMMAND ${CMAKE_COMMAND} -E md5sum ${target_dir}/src/wsjtx.tgz > ${target_dir}/src/wsjtx.tgz.md5sum
+  COMMAND ${CMAKE_COMMAND} -E tar czf ${target_dir}.tgz ${target_dir}
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${target_dir}
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
   DEPENDS hamlib_sources wsjtx_sources
   COMMENT "
 
-Generating the WSJT-X superbuild self-contained source tarball ${__suffix}.tgz
+Generating the WSJT-X superbuild self-contained source tarball ${target_dir}.tgz
 
 To use this  tarball, transfer it to the target  build host, un-tar it
 and, configure  it including  a CMAKE_INSTALL_PREFIX if  required (the
 default is /usr/local), then build and install. For example:
 
-    $ tar xzf ${__suffix}.tgz
+    $ tar xzf ${target_dir}.tgz
     $ mkdir build
     $ cd build
-    $ cmake <extra-args> ../${__suffix}
+    $ cmake <extra-args> ../${target_dir}
     $ cmake --build .
     $ sudo cmake --build . --target install
 
