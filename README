@@ -11,7 +11,7 @@
                                                          
                                                          
                                                          
-Copyright 2001 - 2017 by Joe Taylor, K1JT.
+Copyright 2001 - 2018 by Joe Taylor, K1JT.
 
 WSJT-X Superbuild
 =================
@@ -40,7 +40,7 @@ http://www.physics.princeton.edu/pulsar/K1JT/wsjtx.html
 
 Please refer to the component project README files as well:
 
-https://sourceforge.net/p/wsjt/wsjt/HEAD/tree/branches/wsjtx/README
+https://sourceforge.net/p/wsjt/wsjtx/ci/master/tree/README
 
 for WSJT-X and:
 

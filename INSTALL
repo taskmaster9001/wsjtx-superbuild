@@ -41,18 +41,18 @@ build as follows:
     $ cd <build-dir-path>
     $ cmake <source-dir-path>
 
-By default  the build will install  the application in '/usr',  if you
-want to install it somewhere else e.g. under your own account, you can
-specify   the    install   prefix   as   a    configuration   variable
+By default the build will  install the application in '/usr/local', if
+you want to install it somewhere else e.g. under your own account, you
+can   specify  the   install  prefix   as  a   configuration  variable
 (CMAKE_INSTALL_PREFIX):
 
     $ cmake -D CMAKE_INSTALL_PREFIX=~/.local <source-dir-path>
 
 You may build  a specific version by specifying the  tag in the WSJT-X
-repository  e.g. wsjtx-1.4.0-rc2  by specifying  it as  a variable  to
+repository  e.g.  wsjtx-1.9.1  by  specifying  it  as  a  variable  to
 configure:
 
-    $ cmake -D WSJTX_TAG=tags/wsjtx-1.4.0-rc2 <source-dir-path>
+    $ cmake -D WSJTX_TAG=wsjtx-1.9.1 <source-dir-path>
 
 Once configured the package can be built as follows:
 
@@ -89,28 +89,28 @@ used for a local build is automatically built. For example:
 
     $ mkdir ~/build/wsjtx
     $ cd ~/build/wsjtx
-    $ cmake -D WSJTX_TAG=tags/wsjtx-1.4.0 <source-dir-path>
+    $ cmake -D WSJTX_TAG=wsjtx-1.9.1 <source-dir-path>
     $ cmake --build . --target source
 
 NOTE:  CMake assumes  an  out of  source  build, in  this  case it  is
 mandatory as  the 'source' target  packages itself and  therefore must
 not include any build artefacts.
 
-The  above commands,  if  successful,  will produce  'wsjtx-1.4.0.tgz'
+The  above commands,  if  successful,  will produce  'wsjtx-1.9.1.tgz'
 which is  a source  tarball ready for  use on another  system to  do a
 local build, for example:
 
     $ mkdir ~/build
     $ cd ~/build
-    $ tar xzf wsjtx-1.4.0.tgz
+    $ tar xzf wsjtx-1.9.1.tgz
     $ mkdir build
     $ cd build
-    $ cmake ../wsjtx-1.4.0
+    $ cmake ../wsjtx-1.9.1
     $ cmake --build .
     $ sudo cmake --build . --target install
 
-If successful  this will install  the built application into  /usr, if
-you  wish to  install  it  elsewhere, simply  set  the CMake  variable
+If successful this will install the built application into /usr/local,
+if you  wish to install  it elsewhere,  simply set the  CMake variable
 CMAKE_INSTALL_PREFIX in the configure step above.
 
 
