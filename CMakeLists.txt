@@ -2,10 +2,10 @@ cmake_minimum_required (VERSION 2.8.10 FATAL_ERROR)
 
 project (wsjt-superbuild)
 
-set (__default_tag stable)
+set (__default_tag master)
 
 set (WSJTX_TAG ${__default_tag}
-  CACHE STRING "WSJT-X tag to build, if unset build the latest stable branch.
+  CACHE STRING "WSJT-X tag to build, if unset build the latest master branch HEAD.
 
 For a tag use <tag-name> e.g. wsjtx-1.9.1
 
@@ -55,8 +55,8 @@ if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
   # one day this needs to change to master or some agreed stable SHA
   set (hamlib_TAG integration)
 
-  # decide if we want to build from stable or a tag
-  if (NOT ${WSJTX_TAG} STREQUAL stable)
+  # decide if we want to build from master or a tag
+  if (NOT ${WSJTX_TAG} STREQUAL ${__default_tag})
     # assume we have a tag so find matching hamlib tag
     #
     # this assumed that a tag exists in the hamlib repository that is
