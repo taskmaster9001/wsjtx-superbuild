@@ -23,7 +23,7 @@ source tarball." )
 #
 # Find_library (USB_LIBRARY NAMES libusb.a usb)
 Find_program (PATCH_EXECUTABLE patch REQUIRED)
-
+Find_package (Git REQUIRED)
 
 #
 # extra C flags to minimize hamlib excutable sizes
@@ -50,7 +50,7 @@ if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
   # one day this needs to change to the hamlib git master
   set (hamlib_repo git://git.code.sf.net/u/bsomervi/hamlib)
 
-  set (wsjtx_repo git://git.code.sf.net/p/wsjt/wsjtx)
+  set (wsjtx_repo git@bitbucket.org:k1jt/wsjtx.git)
 
   # one day this needs to change to master or some agreed stable SHA
   set (hamlib_TAG integration)
@@ -100,16 +100,8 @@ ExternalProject_Add (hamlib
 #
 # custom target to make a hamlib source tarball
 #
-ExternalProject_Get_Property (hamlib SOURCE_DIR)
-ExternalProject_Get_Property (hamlib TMP_DIR)
 add_custom_target (hamlib_sources
-  COMMAND ${CMAKE_COMMAND} -E make_directory hamlib
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOURCE_DIR} hamlib
-  COMMAND ${CMAKE_COMMAND} -E remove_directory hamlib/.git
-  COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_CURRENT_BINARY_DIR}/hamlib.tgz hamlib
-  COMMAND ${CMAKE_COMMAND} -E remove_directory hamlib
-  WORKING_DIRECTORY ${TMP_DIR}
-  DEPENDS hamlib-update
+  COMMAND ${GIT_EXECUTABLE} archive --prefix=hamlib/ --remote=${hamlib_repo} ${hamlib_TAG} -o ${CMAKE_CURRENT_BINARY_DIR}/hamlib.tgz
   COMMENT "Generating the hamlib upstream source tarball"
   )
 
@@ -177,16 +169,8 @@ add_custom_target (package DEPENDS wsjtx-package)
 #
 # custom target to make WSJT-X source tarball
 #
-ExternalProject_Get_Property (wsjtx SOURCE_DIR)
-ExternalProject_Get_Property (wsjtx TMP_DIR)
 add_custom_target (wsjtx_sources
-  COMMAND ${CMAKE_COMMAND} -E make_directory wsjtx
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOURCE_DIR} wsjtx
-  COMMAND ${CMAKE_COMMAND} -E remove_directory wsjtx/.git
-  COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_CURRENT_BINARY_DIR}/wsjtx.tgz wsjtx
-  COMMAND ${CMAKE_COMMAND} -E remove_directory wsjtx
-  WORKING_DIRECTORY ${TMP_DIR}
-  DEPENDS wsjtx-update
+  COMMAND ${GIT_EXECUTABLE} archive --prefix=wsjtx/ --remote=${wsjtx_repo} ${WSJTX_TAG} -o ${CMAKE_CURRENT_BINARY_DIR}/wsjtx.tgz
   COMMENT "Generating the WSJT-X upstream source tarball"
   )
 
