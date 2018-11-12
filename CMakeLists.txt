@@ -101,7 +101,7 @@ ExternalProject_Add (hamlib
 # custom target to make a hamlib source tarball
 #
 add_custom_target (hamlib_sources
-  COMMAND ${GIT_EXECUTABLE} archive --prefix=hamlib/ --remote=${hamlib_repo} ${hamlib_TAG} -o ${CMAKE_CURRENT_BINARY_DIR}/hamlib.tgz
+  COMMAND ${GIT_EXECUTABLE} archive --format=tgz --prefix=hamlib/ --remote=${hamlib_repo} ${hamlib_TAG} -o ${CMAKE_CURRENT_BINARY_DIR}/hamlib.tgz
   COMMENT "Generating the hamlib upstream source tarball"
   )
 
@@ -170,7 +170,7 @@ add_custom_target (package DEPENDS wsjtx-package)
 # custom target to make WSJT-X source tarball
 #
 add_custom_target (wsjtx_sources
-  COMMAND ${GIT_EXECUTABLE} archive --prefix=wsjtx/ --remote=${wsjtx_repo} ${WSJTX_TAG} -o ${CMAKE_CURRENT_BINARY_DIR}/wsjtx.tgz
+  COMMAND ${GIT_EXECUTABLE} archive --format=tgz --prefix=wsjtx/ --remote=${wsjtx_repo} ${WSJTX_TAG} -o ${CMAKE_CURRENT_BINARY_DIR}/wsjtx.tgz
   COMMENT "Generating the WSJT-X upstream source tarball"
   )
 
