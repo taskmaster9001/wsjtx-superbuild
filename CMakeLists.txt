@@ -7,7 +7,7 @@ set (__default_tag master)
 set (WSJTX_TAG ${__default_tag}
   CACHE STRING "WSJT-X tag to build, if unset build the latest master branch HEAD.
 
-For a tag use <tag-name> e.g. wsjtx-1.9.1
+For a tag use <tag-name> e.g. wsjtx-2.0.0
 
 The  WSJTX_TAG option  is  only used  if the  directory  'src' is  not
 present.   If the  'src' directory  is present  the build  expects the
@@ -197,9 +197,10 @@ add_custom_target (source
 
 Generating the WSJT-X superbuild self-contained source tarball ${target_dir}.tgz
 
-To use this  tarball, transfer it to the target  build host, un-tar it
-and, configure  it including  a CMAKE_INSTALL_PREFIX if  required (the
-default is /usr/local), then build and install. For example:
+To use this tarball, transfer it to the target build host, un-compress
+and un-tar it;  then configure it including  a CMAKE_INSTALL_PREFIX if
+required  (the default  is /usr/local),  then build  and install.  For
+example:
 
     $ tar xzf ${target_dir}.tgz
     $ mkdir build

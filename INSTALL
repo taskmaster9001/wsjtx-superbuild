@@ -10,29 +10,45 @@
  \$$      \$$  \$$$$$$   \$$$$$$     \$$        \$$   \$$
                                                          
                                                          
-Copyright 2001 - 2017 by Joe Taylor, K1JT.
-                                                         
+Copyright 2001 - 2018 by Joe Taylor, K1JT.
+
+
 Installation
 ============
 
-To build WSJT-X you need some prerequisite tools and libraries.
+To  build WSJT-X  from sources  you need  some prerequisite  tools and
+libraries.
 
 On Linux:
 
    build-essentials
-   gcc-4.8.2 or clang-3.4
-   g++-4.8.2 or clang-3.4
-   gfortran-4.8.2
-   CMake-2.8.9
+   gcc-4.8.2 or clang-3.4 or newer
+   g++-4.8.2 or clang-3.4 or newer
+   gfortran-4.8.2 or newer
+   CMake-2.8.9 or newer
    git
    svn
    asciidoc
 
-   Qt5.2.1  or newer,  qt5libmultimedia-dev, qt5libserialport-dev  and
+   Qt5.5  or  newer, qt5libmultimedia-dev,  qt5libserialport-dev,  and
    their  prerequisites   libfftw3-single-dev  and   its  prerequsites
-   libusb-0.1-dev
+   libusb-0.1-dev.  Note that  these are  Debian style  package names,
+   other distributions  will have different package  names and package
+   contents.
 
 Out of source builds are strongly recommended.
+
+If you are  starting with the self-contained source  tarball then skip
+straight  to  the  section  below headed  "Building  WSJT-X  from  the
+Self-Contained Source Tarball".
+
+The  following   steps  are   instructions  to  generate   the  WSJT-X
+self-contained source tarball, you probably don't need to do that, see
+the previous paragraph.
+
+
+Configuring a Build Tree for Making the Self-Contained SOurce Tarball
+=====================================================================
 
 Create a  build directory somewhere  and cd  to it then  configure the
 build as follows:
@@ -52,7 +68,7 @@ You may build  a specific version by specifying the  tag in the WSJT-X
 repository  e.g.  wsjtx-1.9.1  by  specifying  it  as  a  variable  to
 configure:
 
-    $ cmake -D WSJTX_TAG=wsjtx-1.9.1 <source-dir-path>
+    $ cmake -D WSJTX_TAG=wsjtx-2.0.0 <source-dir-path>
 
 Once configured the package can be built as follows:
 
@@ -89,12 +105,16 @@ used for a local build is automatically built. For example:
 
     $ mkdir ~/build/wsjtx
     $ cd ~/build/wsjtx
-    $ cmake -D WSJTX_TAG=wsjtx-1.9.1 <source-dir-path>
+    $ cmake -D WSJTX_TAG=wsjtx-2.0.0 <source-dir-path>
     $ cmake --build . --target source
 
 NOTE:  CMake assumes  an  out of  source  build, in  this  case it  is
 mandatory as  the 'source' target  packages itself and  therefore must
 not include any build artefacts.
+
+
+Building WSJT-X from the Self-Contained Source Tarball
+======================================================
 
 The  above commands,  if  successful,  will produce  'wsjtx-1.9.1.tgz'
 which is  a source  tarball ready for  use on another  system to  do a
@@ -102,10 +122,10 @@ local build, for example:
 
     $ mkdir ~/build
     $ cd ~/build
-    $ tar xzf wsjtx-1.9.1.tgz
+    $ tar xzf wsjtx-2.0.0.tgz
     $ mkdir build
     $ cd build
-    $ cmake ../wsjtx-1.9.1
+    $ cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF ../wsjtx-2.0.0
     $ cmake --build .
     $ sudo cmake --build . --target install
 
