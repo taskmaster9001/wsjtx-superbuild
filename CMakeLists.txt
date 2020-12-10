@@ -50,7 +50,7 @@ if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
   # one day this needs to change to the hamlib git master
   set (hamlib_repo git://git.code.sf.net/u/bsomervi/hamlib)
 
-  set (wsjtx_repo git://git.code.sf.net/p/wsjt/wsjtx)
+  set (wsjtx_repo https://github.com/taskmaster9001/wsjtx)
 
   # one day this needs to change to master or some agreed stable SHA
   set (hamlib_TAG integration)
