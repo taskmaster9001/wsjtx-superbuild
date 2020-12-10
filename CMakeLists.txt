@@ -54,15 +54,10 @@ if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
   # one day this needs to change to master or some agreed stable SHA
   set (hamlib_TAG integration)
+  set (WSJTX_TAG sbitx)
 
   # decide if we want to build from master or a tag
   if (NOT ${WSJTX_TAG} STREQUAL ${__default_tag})
-    # assume we have a tag so find matching hamlib tag
-    #
-    # this assumed that a tag exists in the hamlib repository that is
-    # exactly the same as the WSJT-X repository tag we intend to build
-    # from
-    set (hamlib_TAG "${WSJTX_TAG}")
     set (target_dir "${WSJTX_TAG}")
     message (STATUS "Building WSJT-X tag: ${WSJTX_TAG}")
     message (STATUS "hamlib tag: ${hamlib_TAG}")
